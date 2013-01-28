@@ -8679,6 +8679,15 @@ Key bindings for other parts in the file:
 )
 
 
+;;;###autoload
+(progn
+  (add-to-list 'auto-mode-alist
+	       '("\\.\\(cir\\|ckt\\|[sS][pP]\\)\\'" . spice-mode))
+  (add-to-list 'auto-mode-alist
+	       '("\\.\\(spout\\|lis\\)\\'" . spice-mode)) ;hspice out
+  (add-to-list 'auto-mode-alist '("\\.[sm]?t0\\'" . spice-mode))
+  (add-to-list 'auto-mode-alist '("\\.[h]?spice\\'" . spice-mode)))
+
 ;; this is sometimes useful
 (provide 'spice-mode)
 
