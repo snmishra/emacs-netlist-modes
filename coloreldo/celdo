@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# Wrapper around eldo, to colorize it's output 
+#
+
+eldo $* -noconf 2>&1 | coloreldo.pl

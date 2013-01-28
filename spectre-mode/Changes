@@ -1,0 +1,85 @@
+Changes 
+
+Release 1.2.12 (3 January 2007)
+==============
+
++ changed spectre-postfix-regexp to match with a maximum of 20 names before
+the postfix keyword. This limits the regexp coloring time significantly
+since it take a long time to backtrack when an instance statement is found
+in the file
+
+Release 1.2.11 (1 December 2003)
+==============
+
++ fixed some doc string typos in variable defs
+
++ font-lock-warning-face is not available in all emacs'en, replaced it
+  by a spectre-warning-face
+
++ \ (backslash) is now correctly recognized as an escape character in spectre
+  names
+
++ also file="" files can be loaded with mouse-2 clicks
+
++ multiple ()'s can be present in instance statements
+
++ note: this version has never been released to the public
+
+Release 1.2.10 (3 June 2003)
+==============
+
++ fixed scale factor font-lock patterns. 
+
++ made font-lock-keywords a list of symbols. You can now set levels
+  of fontification through customization
+
+Release 1.2.9 (21 May 2003)
+=============
+
++ made spectre-mode xemacs 21 compatible (mainly font-lock-warning-face)
+
++ adapted scale factor font-lock patterns
+
+Release 1.2.8 (26 February 2003)
+=============
+
++ added scale factor font-lock patterns, BTW they're different from spice's. 
+
++ added C-cC-f shortcut key for font-lock-fontify-buffer in XEmacs
+
++ made font-lock patters case sensitive.
+
++ added font-lock-set-defaults call in spectre-mode. Was required to make
+  revert-buffer work properly. Something to do with font-lock initialization ?
+
+Release 1.2.6 (23 December 2002)
+=============
+
++ made spectre mode work in emacs 20. Required removal of shy regexp grouping
+  and use of regexp-opt-depth.
+
++ spectre-mode now builds on ntlst-aux and ntlst-section packages
+
++ use ntlst-section to do handling of sections, code, menu etc.
+
++ active-file now also handles recursive loading of included files and 
+  unloading of all other buffers. 
+
++ removed speedbar init and msb fix. All moved into ntlst-aux
+
++ now use font-lock-type-face to handle numeric labels
+
++ highlight embedded changelog entries as in change-log-mode
+
++ added extra key bindings for spectre compile (run), kill and changelog
+  entry addition
+
++ cleaned up various comment strings, removed unused/obsolete code, 
+  reformated code, added documentation strings, renamed various functions,
+  etc.
+
+Release 1.2.3 (10 September 2002)
+=============
+
++ first public release 
+

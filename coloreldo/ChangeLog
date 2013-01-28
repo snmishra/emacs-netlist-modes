@@ -1,0 +1,23 @@
+2001-05-02  Emmanuel Rouat  <emmanuel.rouat@wanadoo.fr>
+
+	* removed CVS stuff and Makefile (useless for us), updated 
+	the other files
+	Removed truncation of lines
+
+	* First release of coloreldo - based on colormake-0.3
+
+
+--------------------------------------------------------------
+
+	ChangeLog of colormake
+
+0.3:
+	 Corrected line length problem in Error: lines.
+	 Minor tweaks.
+
+0.2:
+     Made colormake.pl cut long lines so they fit in one line.
+     Renamed cmake as clmake, created simpler cmake.
+
+0.1: First release
+

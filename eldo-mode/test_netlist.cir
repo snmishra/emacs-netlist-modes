@@ -1,0 +1,283 @@
+Test netlist for Eldo mode
+
+
+!---------------------------------------------------------------
+!-- Project       : (X)emacs eldo mode
+!-- Circuit name  : test_netlisr.cir
+!---------------------------------------------------------------
+!-- Designer(s)   : E. ROUAT <emmanuel.rouat@.wanadoo.fr>
+!-- Library       : 
+!-- Purpose       : Test/Tutorial for eldo mode - not simulatable 
+!-- Inputs        : 
+!-- Outputs       : 
+!-- Supplies      : 
+!-- References    : 
+!---------------------------------------------------------------
+
+! This file is an demo/test/tutorial for eldo-mode, a major mode designed
+! to help editing and viewing eldo netlists.
+! To view the full description of this mode, type 'C-hm'
+
+
+!--------------------------------------------------------------------
+!	COMMENTS AND NETLIST DOCUMENTATION
+!--------------------------------------------------------------------
+
+! Note the difference between 'comments' and 'doc strings' :
+
+* This is a commented out line
+! and this is a doc string
+* and a combination !of both
+
+! You can comment out portions of text using #c/#e:
+! (note that models commented out in this way still appear
+! in the 'models' menu)
+
+#c
+.model MY_NMOS NMOS LEVEL=3 
++ VTO=1V UO=550 VMAX=2.0e5 
++ CGDO=0.4p CGBO=2.0e-10
+
+.model MY_PMOS NMOS LEVEL=3 
++ VTO=-1V UO=230 VMAX=1.9e5 
++ CGDO=0.4p CGBO=2.0e-10
+#e
+
+! By using 'C-c C-c' you can 'toggle' between commented out portions
+! of test - select the region that follows, type 'C-c C-c' (or use
+! '(Un)comment-region' in the menu) and see what happens:
+
+! <select from line below>
+
+.param Rload=1MEG
+.param Cload=1nF
+*.param Rload=10MEG
+*.param Cload=0.1nF
+
+! <to line above>
+
+!--------------------------------------------------------------------
+!	LIBRARIES 
+!--------------------------------------------------------------------
+
+! 'models.lib' should highlight when the mouse pointer passes over it.
+! This means you can load this file using the middle mouse button (if
+! the file exists)
+
+.include models.lib
+.lib key=typical models.lib
+
+
+! Lets define some MOSFET models - these should appear in
+! the 'Mosfets' entry in the index menu.
+
+.MODEL MY_NMOS NMOS LEVEL=2 TPG=1
+ + CGDO=2.9E-10 CGBO=1.7E-10 CGSO=2.9E-10
+ + CJ=0.36E-3 MJ=.43 CJSW=2.5E-10 MJSW=.19
+ + JS=0.01E-3 PB=0.96 RSH=25.5
+ + TOX=2.38E-08 LD=-0.05E-6 XJ=0.175E-6
+ + VTO=.736 NSUB=33.3E+15 NFS=0.452E+12 NEFF=5.25   
+ + UO=515 UCRIT=28.4E4 UEXP=0.251
+ + VMAX=77300 DELTA=0.0 KF=0.101E-25 AF=1.33
+
+.MODEL MY_PMOS PMOS LEVEL=2 TPG=-1
+ + CGDO=2.9E-10 CGBO=1.7E-10 CGSO=2.9E-10
+ + CJ=0.34E-3 MJ=.53 CJSW=2.2E-10 MJSW=.2
+ + JS=0.02E-3 PB=0.97 RSH=46
+ + TOX=2.38E-08 LD=0.043E-6 XJ=0.056E-6
+ + VTO=-.751 NSUB=18E15 NFS=1.3E12 NEFF=3.09
+ + U0=175 UCRIT=21.6E4 UEXP=0.268
+ + VMAX=54000 DELTA=0.798 KF=0.39E-37 AF=1.29
+
+
+! Note that the following will not appear in the imenu 'Models' entry
+! because they are commented out:
+
+*.MODEL MY_NMOS2 NMOS LEVEL=2 TPG=1
+* + CGDO=2.9E-10 CGBO=1.7E-10 CGSO=2.9E-10
+* + CJ=0.36E-3 MJ=.43 CJSW=2.5E-10 MJSW=.19
+* + JS=0.01E-3 PB=0.96 RSH=25.5
+* + TOX=2.38E-08 LD=-0.05E-6 XJ=0.175E-6
+* + VTO=.736 NSUB=33.3E+15 NFS=0.452E+12 NEFF=5.25   
+* + UO=515 UCRIT=28.4E4 UEXP=0.251
+* + VMAX=77300 DELTA=0.0 KF=0.101E-25 AF=1.33
+
+*.MODEL MY_PMOS2 PMOS LEVEL=2 TPG=-1
+* + CGDO=2.9E-10 CGBO=1.7E-10 CGSO=2.9E-10
+* + CJ=0.34E-3 MJ=.53 CJSW=2.2E-10 MJSW=.2
+* + JS=0.02E-3 PB=0.97 RSH=46
+* + TOX=2.38E-08 LD=0.043E-6 XJ=0.056E-6
+* + VTO=-.751 NSUB=18E15 NFS=1.3E12 NEFF=3.09
+* + U0=175 UCRIT=21.6E4 UEXP=0.268
+* + VMAX=54000 DELTA=0.798 KF=0.39E-37 AF=1.29
+
+! The following has a wrong syntax - note the fontification
+
+.model 1WRONG_SYNTAX NMOS
++ LEVEL =2  
+
+! Here is a bipolar model:
+
+.MODEL MY_BIPOLAR NPN(BF=75 RB=100 CJE=1PF CJC=3PF)
+
+!--------------------------------------------------------------------
+!	NETLIST 
+!--------------------------------------------------------------------
+
+! Lets define a subckt - a parametrised inverter
+! A nifty thing would be to have automatic indentation
+! between '.SUBCKT' and '.ENDS'....
+
+.SUBCKT FOO IN OUT VDD VSS param: W=5u L=0.5U
+MP OUT IN VDD VDD MY_PMOS W={3*W} L={L}
+MN OUT IN VSS VSS MY_NMOS W={W} L={L}
+.ENDS FOO
+
+
+! In the following instanciations, FOO should be highlighted.
+! Note that a multi-line instanciation isn't alway fontified 
+! correctly after you modify it. This is because font lock works
+! line by line (but hitting  'C-c C-f' refontifies the buffer)
+
+Xtest1 in out vdd vss FOO
+Xtest2 in out param vdd vss FOO
+Xtest3 in out param vdd vss FOO ! comment
+Xtest4 in out vdd vss FOO param: vhi=hi vlo=lo 
+Xtest5 in out vdd vss FOO vhi=hi
+
+Xtest6 in out vdd vss FOO
++ param: vhi=hi
+
+Xtest7 in out vdd vss
++FOO param: vhi=hi
+
+Xtest8 in out vdd vss 
++  FOO vhi=hi
+
+Xtest9 in out 
++ vdd vss
++ gnd FOO param: vhi=hi
+
+Xtest10 in out 
++ vdd vss FOO 
+
+! This works too, now....
+Xtest11 in out vdd  
+*+ vs FOO#1
++ vss FOO 
+
+! FOO#1 is a valid name, but 1FOO1 isn't:
+
+Xtest12 1 2 3 4 FOO#1 
+Xtest13 1 2 3 4 1FOO1
+
+
+
+! A Mosfet/diode/bipolar model name gets highlited in the same way:
+
+D1 VMINUS MI MY_DIODE AREA=250E-15 PERI=2E-6
+M1 D G S B MY_PMOS W=10u L=0.5u
+Q1 C B E S MY_BIPOLAR area=1
+
+
+
+! Use of templates - lots of models, macromodels and waveforms are available
+! as templates. They are all listed in the 'Eldo' menu. You can also use
+! automatic completion - just type in the first few letters of the template
+! that you want and type <TAB>. For example, to get the template for a 
+! sample_hold macromodel, type 'saho<TAB>' and then fill in the values.
+! Most entries have default values, so that you can usually type 'ENTER' on
+! the prompt and you'll get the default value filled in for you.
+! Note the fontification of the macromodel name.
+
+Ysampleholdtest SA_HO INM INP OUP OUTM param: FS=1e6 TACQ=1e-9 DV=20mv 
+
+! All major electronic components have a full template, like diodes, bipolar and
+! MOS transistors, capacitances, inductances. For example, to get the template for 
+! diode, just type 'D<TAB>'. The main components that have such template are:
+! R - Resistor
+! L - Inductor
+! C - Capacitor
+! RC - RC line
+! D - Diode
+! Q - Bipolar
+! J - JFET
+! M - MOSFET
+
+
+
+! To see the list of available templates, type 'C-hv tempo-tags'
+! To insert a real <TAB>, type 'SHIFT-TAB' 
+
+
+
+!--------------------------------------------------------------------
+!	INPUT SIGNALS 
+!--------------------------------------------------------------------
+
+! Now some inputs and supplies
+
+VDD VDD 0 DC 5V
+VSS VSS 0 DC 0
+
+VIN IN 0 Pulse(0 5 1us 0.1ns 0.1ns 10ns 20ns)
+
+!--------------------------------------------------------------------
+!	SIMULATION OPTIONS 
+!--------------------------------------------------------------------
+
+.options STAT=1 SIMUDIV=10 !Status reports
+.options noascii nomod  
+.options eps=1e-7 itol=1e-6 gmin=1e-16 analog 
+
+
+! Simulation cards - fontified in 'eldo-analysis-face'
+
+.op
+.temp 27
+.tran 0.1us 10us 
+
+! What will we look at? All 'output' cards are fontified 
+! in eldo-output-face. This includes .print, .plot, .plotbus
+! and .extract cards.
+
+.plot tran V(IN) V(OUT)
+.plot tra V(OUT) ! Note wrong syntax
+.probe I V
+
+
+!--------------------------------------------------------------------
+!	MACROS/EXTRACTS 
+!--------------------------------------------------------------------
+
+.DEFMAC period(a,th,time)=xdown(a,th,time,end)-xdown(a,th,time,start)
+.DEFMAC duty_cycle(a,th,time)=(xdown(a,th,time,end)-xup(a,th,time,end))
++ /(xdown(a,th,time,end)-xdown(a,th,time,start))*100
+
+
+.EXTRACT AC label="Phase margin" xycond(vp(out),vdb(out)<0.0)+180 
+.EXTRACT DCSWEEP
+.EXTRACT TRAN AVERAGE(I(VDD)) 
+
+.END
+
+! To use the Changelog, type 'C-c ac' and type the text at the prompt.
+! The Changelog is always after the '.END' card 
+
+!--------------------------------------------------------------------
+!	Changelog 
+!--------------------------------------------------------------------
+
+* Wed Sep  4 2002 E. ROUAT (DAIS) <emmanuel.rouat@st.com>
+
+    - Third entry
+
+* Wed Apr 18 2001 E. ROUAT (DAIS) <emmanuel.rouat@st.com>
+
+    - Second entry
+    - First entry
+
+
+*** Local Variables:
+*** mode:eldo
+*** End:
