@@ -307,9 +307,10 @@
 	  )
   "Postfix statement matching regexp")
 
-(defconst spectre-scale-factors
-  '("T" "G" "M" "K" "k" "_" "%" "c" "m" "u" "n" "p" "f" "a")
-  "list of scale factors in spectre, different from standard spice !")
+(eval-when-compile
+  (defconst spectre-scale-factors
+    '("T" "G" "M" "K" "k" "_" "%" "c" "m" "u" "n" "p" "f" "a")
+    "list of scale factors in spectre, different from standard spice !"))
 
 (defconst spectre-prefix-regexp
   (concat "\\<\\(" (regexp-opt spectre-prefix-keywords) "\\)\\>")
