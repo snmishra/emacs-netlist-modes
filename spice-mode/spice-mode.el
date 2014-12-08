@@ -2199,15 +2199,15 @@ has."
 	    (setq start-lib (point))
 	    (search-forward-regexp spice-library-regexp-end end-point)
 					; (let ((end-lib (point)))
-	    (or (extent-at (point) (buffer-name) 'mouse-face) ;; not yet extended
+	    (or (overlays-at (point)) ;; not yet extended
 		(progn
-		  (setq extent (make-extent start-lib (point)))
-		  (set-extent-property extent 'start-closed 't)
-		  (set-extent-property extent 'end-closed 't)
-		  (set-extent-property extent 'detachable 't)
-		  (set-extent-property extent 'spice-library 't)
-		  (set-extent-property extent 'mouse-face 'highlight)
-		  (set-extent-keymap extent spice-mode-mouse-map)))))))))
+		  (setq extent (make-overlay start-lib (point)))
+		  (overlay-put extent 'start-closed 't)
+		  (overlay-put extent 'end-closed 't)
+		  (overlay-put extent 'detachable 't)
+		  (overlay-put extent 'spice-library 't)
+		  (overlay-put extent 'mouse-face 'highlight)
+		  (overlay-put extent 'local-map spice-mode-mouse-map)))))))))
 
 
 (defun spice-colorize-libraries-buffer ()
