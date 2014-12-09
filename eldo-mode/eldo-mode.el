@@ -3601,8 +3601,7 @@ If the section is not found, leave point at previous location."
 
 
 (if eldo-running-xemacs
-    (require 'overlay)
-  (require 'lucid)) ;; what else can we do ??
+    (require 'overlay))
 
 (defconst eldo-library-regexp-start
   ;;"^\\s-*\\.\\(include\\|lib\\|libfas\\)\\s-+\\(?:key=\\w+\\s-\\)*"
@@ -3665,18 +3664,18 @@ does."
 	)
       ; make new ones, could reuse deleted one ?
       (while (search-forward-regexp eldo-library-regexp-start end-point t)
-	( let (start-lib extent)
+	(let (start-lib extent)
 	  (setq start-lib (point))
 	  (search-forward-regexp eldo-library-regexp-end end-point)
 					; (let ((end-lib (point)))
-	  (or (extent-at (point) (buffer-name) 'mouse-face) ;; not yet extended
+	  (or (overlays-at (point)) ;; not yet extended
 	      (progn
-		(setq extent (make-extent start-lib (point)))
-		(set-extent-property extent 'start-closed t)
-		(set-extent-property extent 'end-closed t)
-		(set-extent-property extent 'detachable t)
-		(set-extent-property extent 'mouse-face 'highlight)
-		(set-extent-keymap extent eldo-mode-mouse-map)))))))
+		(setq extent (make-overlay start-lib (point)))
+		(overlay-put extent 'start-closed t)
+		(overlay-put extent 'end-closed t)
+		(overlay-put extent 'detachable t)
+		(overlay-put extent 'mouse-face 'highlight)
+		(overlay-put extent 'local-map eldo-mode-mouse-map)))))))
   )
 
 (defun eldo-colorize-libraries-buffer ()
